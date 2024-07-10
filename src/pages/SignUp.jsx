@@ -1,13 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
+import {AuthContext} from "../context/AuthContext";
 
 function SignUp() {
     const navigate = useNavigate();
+    const [fetchingCompleted, setFetchingCompleted] = useState(false);
+    const {state, Toggle} = useContext(AuthContext)
 
     async function SendInfo(e) {
         e.preventDefault();
-        setfetchingCompleted(false);
+        setFetchingCompleted(false);
 
         try {
             const response = await axios.post('http://localhost:3000/register',
@@ -16,6 +19,9 @@ function SignUp() {
                     password: document.getElementById("password").value,
                     username: document.getElementById("username").value
                 });
+            if (state) {
+                Toggle();
+            }
             //localStorage.setItem('token', response.data.accessToken);
             navigate('/SignIn');
         } catch (e) {

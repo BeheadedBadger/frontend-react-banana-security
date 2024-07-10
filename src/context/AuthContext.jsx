@@ -23,8 +23,10 @@ function AuthContextProvider({ children }) {
     function Toggle(){
         setAuthInfo({
             isAuth: !authInfo.isAuth,
-            user: authInfo.user,
+            user: null,
         });
+        localStorage.setItem('token', null);
+        localStorage.setItem('username', null);
     }
 
     async function setUser() {

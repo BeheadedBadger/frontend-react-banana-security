@@ -8,9 +8,8 @@ function SignIn() {
     const [usrnm, setUsrnm] = useState("");
 
     useEffect(() => {
-        setUsrnm[username]
-    }, [username]);
-
+        setUsrnm(localStorage.getItem('username'))
+    }, [localStorage.getItem('username')]);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -44,7 +43,7 @@ function SignIn() {
             </form>
             <p>Heb je nog geen account? <Link to="/signup">Registreer</Link> je dan eerst.</p>
             </>}
-            {(localStorage.getItem('username')!== undefined && state) && <h1>Welkom {localStorage.getItem('username')}</h1>}
+            {(usrnm && state) && <h1>Welkom {usrnm}</h1>}
         </main>
     );
 }
