@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import logo from '../assets/banana-01.png';
 import { useNavigate, Link } from 'react-router-dom';
+import {AuthContext} from "../context/AuthContext";
 
 function NavBar() {
   const navigate = useNavigate();
+  const {state, Toggle} = useContext(AuthContext);
+
 
   return (
     <nav>
@@ -17,12 +20,19 @@ function NavBar() {
         </Link>
 
       <div>
-        <button
+          {state && <button
+              type="button"
+              onClick={() => Toggle()}
+          >
+              Sign out
+          </button>
+          }
+        {!state && <button
           type="button"
           onClick={() => navigate('/signin')}
         >
           Log in
-        </button>
+        </button>}
         <button
           type="button"
           onClick={() => navigate('/signup')}
