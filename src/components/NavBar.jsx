@@ -5,7 +5,7 @@ import {AuthContext} from "../context/AuthContext";
 
 function NavBar() {
   const navigate = useNavigate();
-  const {state, stateChangeHandler} = useContext(AuthContext);
+  const {state, Toggle} = useContext(AuthContext);
 
 
   return (
@@ -22,7 +22,7 @@ function NavBar() {
       <div>
           {state && <button
               type="button"
-              onClick={() => stateChangeHandler()}
+              onClick={() => Toggle()}
           >
               Sign out
           </button>

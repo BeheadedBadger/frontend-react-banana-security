@@ -6,36 +6,44 @@ export const AuthContext = createContext({});
 
 function AuthContextProvider({ children }) {
 
-    const [isAuthenticated, toggleIsAuthenticated] = useState({
+    const [authInfo, setAuthInfo] = useState({
         isAuth: false,
         user: null,
     });
 
     useEffect(() => {
-        console.log(isAuthenticated.isAuth);
-    }, [isAuthenticated]);
+        console.log("Authenticated = " + authInfo.isAuth);
+    }, [authInfo]);
+
+    useEffect(() => {
+        if (authInfo.user != null)
+            console.log("user = " + authInfo.user.data.username);
+    }, [authInfo.user]);
 
     function Toggle(){
-        toggleIsAuthenticated({
-            isAuth: !isAuthenticated.isAuth
+        setAuthInfo({
+            isAuth: !authInfo.isAuth,
+            user: authInfo.user,
         });
     }
 
     async function setUser() {
+            authInfo.user = null;
+
             const decodedToken = jwtDecode(localStorage.getItem('token'));
             console.log(decodedToken);
             try {
-                const user = await axios.get(`http://localhost:3000/users/${decodedToken.sub}`, {
+                authInfo.user = await axios.get(`http://localhost:3000/users/${decodedToken.sub}`, {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 });
-                isAuthenticated.user = user;
-                console.log(isAuthenticated.user);
             }
 
             catch(e) {
                 console.error(e);
             }
+
+            localStorage.setItem('username', authInfo.user.data.username);
     }
 
     async function getSecret(){
@@ -53,9 +61,9 @@ function AuthContextProvider({ children }) {
     }
 
     const data = {
-        state: isAuthenticated.isAuth,
+        state: authInfo.isAuth,
         Toggle,
-        user: {id: "", email : "", username : ""},
+        user: authInfo.user,
         setUser,
         getSecret,
     }

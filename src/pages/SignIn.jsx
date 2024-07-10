@@ -1,10 +1,16 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import {AuthContext} from '../context/AuthContext';
 import axios from "axios";
 
 function SignIn() {
-    const {setUser, Toggle, getSecret, state, user} = useContext(AuthContext);
+    const {setUser, getUser, Toggle, getSecret, username, state} = useContext(AuthContext);
+    const [usrnm, setUsrnm] = useState("");
+
+    useEffect(() => {
+        setUsrnm[username]
+    }, [username]);
+
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -19,8 +25,8 @@ function SignIn() {
             console.error(e);
         }
 
-        getSecret();
         setUser();
+        getSecret();
         Toggle();
     }
 
@@ -38,7 +44,7 @@ function SignIn() {
             </form>
             <p>Heb je nog geen account? <Link to="/signup">Registreer</Link> je dan eerst.</p>
             </>}
-            {state && <h1>Welkom {user}</h1>}
+            {(localStorage.getItem('username')!== undefined && state) && <h1>Welkom {localStorage.getItem('username')}</h1>}
         </main>
     );
 }
