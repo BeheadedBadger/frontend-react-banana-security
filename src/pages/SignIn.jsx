@@ -1,39 +1,46 @@
 import React, {useContext, useState} from 'react';
 import { Link } from 'react-router-dom';
 import {AuthContext} from '../context/AuthContext';
+import axios from "axios";
 
 function SignIn() {
-    let {stateChangeHandler, state, user} = useContext(AuthContext);
-    const [email, setEmail] = useState("");
+    const {setUser, Toggle, getSecret, state, user} = useContext(AuthContext);
 
-    function handleSignIn(user, userEmail, stateChangeHandler) {
-        setEmail(userEmail);
-        stateChangeHandler();
-        user = userEmail;
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('http://localhost:3000/login', {
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,
+            });
+            localStorage.setItem('token', response.data.accessToken);
+        } catch (e) {
+            console.error(e);
+        }
+
+        getSecret();
+        setUser();
+        Toggle();
     }
 
     return (
-    <>
-      <h1>Inloggen</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab alias cum debitis dolor dolore fuga id molestias qui quo unde?</p>
-
-        {!state && <>
+        <main>
+            {!state &&<> <h1>Inloggen</h1>
             <form>
                 <label htmlFor="email">Email:</label>
                 <input type="email" name="email" id="email"/>
                 <label htmlFor="password">Password:</label>
                 <input type="password" name="password" id="password"/>
                 <button type="button"
-                        onClick={() => handleSignIn(user, document.getElementById("email").value, stateChangeHandler)}>Inloggen
+                        onClick={handleSubmit}>Inloggen
                 </button>
             </form>
-
-            <p>Heb je nog geen account? <Link to="/signup">Registreer</Link> je dan eerst.</p></>}
-
-
-        {state && <p>Welkom {email}!</p>}
-        </>
-  );
+            <p>Heb je nog geen account? <Link to="/signup">Registreer</Link> je dan eerst.</p>
+            </>}
+            {state && <h1>Welkom {user}</h1>}
+        </main>
+    );
 }
 
 export default SignIn;

@@ -1,12 +1,28 @@
-import React, {useContext, useState} from 'react';
-import { Link } from 'react-router-dom';
-import {AuthContext} from "../context/AuthContext";
+import React, {useContext, useEffect, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import axios from "axios";
 
 function SignUp() {
+    const navigate = useNavigate();
 
-    function doSomething() {
-        //Do something on signup
+    async function SendInfo(e) {
+        e.preventDefault();
+        setfetchingCompleted(false);
+
+        try {
+            const response = await axios.post('http://localhost:3000/register',
+                {
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value,
+                    username: document.getElementById("username").value
+                });
+            //localStorage.setItem('token', response.data.accessToken);
+            navigate('/SignIn');
+        } catch (e) {
+            console.error(e);
+        }
     }
+
 
     return (
     <>
@@ -22,7 +38,7 @@ function SignUp() {
             <label htmlFor="password">Password:</label>
             <input type="password" name="password" id="password"/>
             <button type="button"
-                 onClick={() => doSomething()}>Registreren
+                 onClick={SendInfo}>Registreren
             </button>
         </form>
         <p>Heb je al een account? Je kunt je <Link to="/signin">hier</Link> inloggen.</p>
